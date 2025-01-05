@@ -16,6 +16,12 @@
 <i>When today challenge is yet to be completed, it will show a timer and the streak count</i>
 </p>
 
+# Installation
+
+Download the extension file at https://github.com/kandoan/leetcode-habit/releases/
+
+Choose the file appropriate to the browser you are using, and then install it accordingly.
+
 # How it's developed
 
 It's a somewhat barebone setup to develop a Manifest V3 cross-browser extension with:
