@@ -27,21 +27,21 @@ It's a somewhat barebone setup to develop a Manifest V3 cross-browser extension 
 
 As mentioned, the project is quite small and barebone so the build steps are quite scuffed so please bear with me.
 
-To build the `dist` directory that can be loaded into browsers for debugging purpose:
+Use 1 of the command below, depending on which browser you're targeting, to build the `dist` directory that can be loaded into browsers for debugging purpose:
 ```
-npm run build
+npm run build:firefox
+npm run build:chrome
 ```
 
-If you're using Firefox, you can also run this command so that it can automatically reload the extension when it's built, but you still have to run the build command each time though so not fully hot reloading like on webdev:
+If you're using Firefox, you can also run this command so that it can automatically rebuild and reload the extension to have an easier development time:
 ```
 npm start
 ```
 
-There is no way to automatically reload on Chrome yet.
+There is no way to do it automatically on Chrome yet.
 
 To pack/bundle the extension, you have to do it manually.
 
 # Todo
 
-- Add tests. Yes, there is no test right now to get it done quickly.
-- Implement auto rebuild in combination with auto reload to replicate hot reloading on webdev side.
+- Add tests. Yes, there is no test right now, just to get it done quick (and dirty).
