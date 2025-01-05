@@ -17,7 +17,9 @@
     "start:step:background": "vite build --watch --config vite.background.config.ts",
     "start:step:inject": "vite build --watch --config vite.inject.config.ts",
     "start:webext": "web-ext run --source-dir ./dist/",
-    "start": "tsc && cross-env BROWSER=firefox vite build && npm-run-all --parallel start:step:content start:step:background start:step:inject start:webext"
+    "start": "tsc && cross-env BROWSER=firefox vite build && npm-run-all --parallel start:step:content start:step:background start:step:inject start:webext",
+    "package:firefox": "web-ext build -o --source-dir ./dist/",
+    "sign:firefox": "web-ext sign --source-dir ./dist/ --channel unlisted --amo-metadata ./firefox-metadata.json --api-key=$AMO_API_KEY --api-secret=$AMO_API_SECRET"
   },
   "dependencies": {
     "cross-env": "^7.0.3",

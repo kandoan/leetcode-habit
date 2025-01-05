@@ -2,8 +2,14 @@ import path from "path";
 import { writeFile } from "fs/promises";
 import { PluginOption } from "vite";
 
-export const generateManifest = (useServiceWorker: boolean) => {
-  return {
+const BROWSERS = {
+  FIREFOX: "firefox",
+  CHROME: "chrome",
+};
+
+const generateManifest = (browser: String = BROWSERS.FIREFOX) => {
+  const useServiceWorker = browser === BROWSERS.CHROME;
+  const manifest: any = {
     manifest_version: 3,
     name: "Leetcode Habit",
     version: "1.0",
@@ -45,6 +51,16 @@ export const generateManifest = (useServiceWorker: boolean) => {
       },
     ],
   };
+
+  if (browser === BROWSERS.FIREFOX) {
+    manifest.browser_specific_settings = {
+      gecko: {
+        id: "leetcode-habit@kandoan.com",
+      },
+    };
+  }
+
+  return manifest;
 };
 
 export const createManifestGenerator = () => {
@@ -61,7 +77,7 @@ export const createManifestGenerator = () => {
 
       await writeFile(
         outputPath,
-        JSON.stringify(generateManifest(targetBrowser === "chrome"), null, 2)
+        JSON.stringify(generateManifest(targetBrowser), null, 2)
       );
     },
   } satisfies PluginOption;

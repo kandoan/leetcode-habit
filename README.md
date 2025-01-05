@@ -27,12 +27,14 @@ It's a somewhat barebone setup to develop a Manifest V3 cross-browser extension 
 
 As mentioned, the project is quite small and barebone so the build steps are quite scuffed so please bear with me.
 
-Use 1 of the command below, depending on which browser you're targeting, to build the `dist` directory that can be loaded into browsers for debugging purpose:
+### Build /dist/ dir for manual debug installing
+Use 1 of the command below, depending on which browser you're targeting, to build the `dist` directory that can be manually loaded into browsers for debugging purpose:
 ```
 npm run build:firefox
 npm run build:chrome
 ```
 
+### Auto rebuild & reload
 If you're using Firefox, you can also run this command so that it can automatically rebuild and reload the extension to have an easier development time:
 ```
 npm start
@@ -40,7 +42,17 @@ npm start
 
 There is no way to do it automatically on Chrome yet.
 
-To pack/bundle the extension, you have to do it manually.
+### Package & release
+To package/bundle the extension for Firefox, and also sign:
+```
+npm run build:firefox
+npm run package:firefox
+npm run sign:firefox
+```
+
+You need to retrieve the API key & API secret of AMO and store them in the env var `AMO_API_KEY` and `AMO_API_SECRET` for the signing step.
+
+For Chrome, currently it has to be done manually.
 
 # Todo
 
