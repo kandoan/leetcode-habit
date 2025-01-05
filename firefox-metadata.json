@@ -1,4 +1,13 @@
 {
   "categories": { "firefox": ["alerts-updates"] },
-  "requires_payment": false
+  "requires_payment": false,
+  "name": {
+    "en-US": "Leetcode Habit"
+  },
+  "summary": {
+    "en-US": "A simple extension to track Leetcode daily coding challenge status"
+  },
+  "homepage": {
+    "en-US": "https://github.com/kandoan/leetcode-habit/"
+  }
 }
