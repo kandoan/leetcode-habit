@@ -5,15 +5,18 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && $npm_execpath run build:content && $npm_execpath run build:background && $npm_execpath run build:inject",
-    "build:content": "tsc && vite build --config vite.content.config.ts",
-    "build:background": "tsc && vite build --config vite.background.config.ts",
-    "build:inject": "tsc && vite build --config vite.inject.config.ts",
+    "build:firefox": "tsc && cross-env BROWSER=firefox vite build && $npm_execpath run build:step:all",
+    "build:chrome": "tsc && cross-env BROWSER=chrome vite build && $npm_execpath run build:step:all",
+    "build:step:all": "$npm_execpath run build:step:content && $npm_execpath run build:step:background && $npm_execpath run build:step:inject",
+    "build:step:content": "tsc && vite build --config vite.content.config.ts",
+    "build:step:background": "tsc && vite build --config vite.background.config.ts",
+    "build:step:inject": "tsc && vite build --config vite.inject.config.ts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "start": "web-ext run --source-dir ./dist/"
   },
   "dependencies": {
+    "cross-env": "^7.0.3",
     "web-ext": "^8.2.0",
     "webextension-polyfill": "^0.12.0"
   },
