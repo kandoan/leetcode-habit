@@ -3,17 +3,17 @@
 **Leetcode Habit** is a small cross-browser extension that acts like the little fire icon on Leetcode's top bar, but instead as an extension so you can see it all the time while browsing the internet and so can remind yourself to do the daily challenge everyday.
 
 <p align="center">
-
 <img src="docs/chrome-completed.png"/>
-
-When today challenge has been completed, it will show a streak count
+</p>
+<p align="center">
+<i>When today challenge has been completed, it will show a streak count</i>
 </p>
 
 <p align="center">
-
 <img src="docs/firefox-pending.png"/>
-
-When today challenge is yet to be completed, it will show a timer and the streak count
+</p>
+<p align="center">
+<i>When today challenge is yet to be completed, it will show a timer and the streak count</i>
 </p>
 
 # How it's developed
