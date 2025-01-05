@@ -12,12 +12,17 @@ import {
   GetStreakCounterResponse,
   GlobalDataResponse,
   GraphQLRequest,
-  RuntimeState,
   SubmitModalInfoResponse,
 } from "../types";
 import { renderIcon } from "../helper/icon";
-
-let runtimeState: RuntimeState = {};
+import {
+  getActiveQuestion,
+  getPreviousTimeLeft,
+  getStreakCounter,
+  setPreviousTimeLeft,
+  setStreakCounter,
+  updateSessionState,
+} from "../helper/storage";
 
 browser.runtime.onStartup.addListener(async () => {
   setup();
@@ -37,15 +42,16 @@ browser.runtime.onMessage.addListener(async ({ detail: data }) => {
 
   switch (operationName) {
     case "submitModalInfo": {
-      runtimeState.streakCounter = (
-        responseBody as SubmitModalInfoResponse
-      )?.data?.dccSubmissionPollingV2?.dccSubmissionInfo?.streakCounter;
+      await setStreakCounter(
+        (responseBody as SubmitModalInfoResponse)?.data?.dccSubmissionPollingV2
+          ?.dccSubmissionInfo?.streakCounter
+      );
       break;
     }
     case "getStreakCounter": {
-      runtimeState.streakCounter = (
-        responseBody as GetStreakCounterResponse
-      )?.data?.streakCounter;
+      await setStreakCounter(
+        (responseBody as GetStreakCounterResponse)?.data?.streakCounter
+      );
       break;
     }
     case "globalData": {
@@ -53,20 +59,20 @@ browser.runtime.onMessage.addListener(async ({ detail: data }) => {
         ?.streakCounter;
 
       if (streakCounter) {
-        runtimeState.streakCounter = streakCounter;
+        await setStreakCounter(streakCounter);
       }
       break;
     }
   }
 
-  renderIcon(runtimeState.streakCounter);
+  renderIcon(await getStreakCounter());
 });
 
 browser.alarms.onAlarm.addListener(async () => {
   try {
     checkNeedReloadStreakCounter();
 
-    renderIcon(runtimeState.streakCounter);
+    renderIcon(await getStreakCounter());
 
     createAlarm();
   } catch (e) {
@@ -75,10 +81,11 @@ browser.alarms.onAlarm.addListener(async () => {
 });
 
 browser.action.onClicked.addListener(async () => {
-  if (!runtimeState.activeQuestion) return;
+  const activeQuestion = await getActiveQuestion();
+  if (!activeQuestion) return;
 
   browser.tabs.create({
-    url: `${LEETCODE_HOST}${runtimeState.activeQuestion}`,
+    url: `${LEETCODE_HOST}${activeQuestion}`,
   });
 });
 
@@ -88,9 +95,9 @@ const setup = async () => {
 
   await reloadCurrentStreakCounter();
 
-  runtimeState.previousTimeLeft = getNextTimeLeft();
+  await setPreviousTimeLeft(getNextTimeLeft());
 
-  renderIcon(runtimeState.streakCounter);
+  renderIcon(await getStreakCounter());
 
   createAlarm();
 };
@@ -98,12 +105,14 @@ const setup = async () => {
 const reloadCurrentStreakCounter = async () => {
   try {
     const response = await fetchCurrentStreakCounter();
-    runtimeState.streakCounter = response?.data.streakCounter;
-    runtimeState.activeQuestion =
-      response?.data.activeDailyCodingChallengeQuestion?.link;
+    await updateSessionState((state) => {
+      state.streakCounter = response?.data.streakCounter;
+      state.activeQuestion =
+        response?.data.activeDailyCodingChallengeQuestion?.link;
+    });
   } catch (e) {
     console.error(e);
-    runtimeState.streakCounter = undefined;
+    await setStreakCounter(undefined);
   }
 };
 
@@ -115,18 +124,16 @@ const createAlarm = () => {
 
 const checkNeedReloadStreakCounter = async () => {
   // Force reload when the streak counter hasn't been loaded successfully
-  if (!runtimeState.streakCounter) {
+  if (!(await getStreakCounter())) {
     await reloadCurrentStreakCounter();
     return;
   }
 
   // Check when a new date start, which is when the previous time left would then be lower than the new time
   const newTimeLeft = getNextTimeLeft();
-  if (
-    runtimeState.previousTimeLeft &&
-    newTimeLeft > runtimeState.previousTimeLeft
-  ) {
+  const previousTimeLeft = await getPreviousTimeLeft();
+  if (previousTimeLeft && newTimeLeft > previousTimeLeft) {
     await reloadCurrentStreakCounter();
   }
-  runtimeState.previousTimeLeft = newTimeLeft;
+  await setPreviousTimeLeft(newTimeLeft);
 };

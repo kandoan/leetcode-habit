@@ -26,7 +26,7 @@ const generateManifest = (browser: String = BROWSERS.FIREFOX) => {
       default_title: "Leetcode Habit",
     },
 
-    permissions: ["cookies", "alarms"],
+    permissions: ["cookies", "alarms", "storage"],
 
     host_permissions: ["*://*.leetcode.com/*", "*://leetcode.com/*"],
 
