@@ -12,7 +12,7 @@ const generateManifest = (browser: String = BROWSERS.FIREFOX) => {
   const manifest: any = {
     manifest_version: 3,
     name: "Leetcode Habit",
-    version: "1.0",
+    version: process.env.npm_package_version,
     description: "Track your daily coding challenge on Leetcode.",
 
     icons: {
